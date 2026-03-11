@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Emergency Mesh</string>
+
+    <!-- Main Screen -->
+    <string name="title_main">🆘 Emergency Mesh</string>
+    <string name="subtitle_main">Offline Emergency Broadcasting</string>
+
+    <!-- Status Card -->
+    <string name="system_status">System Status</string>
+    <string name="service_inactive">● Service: Inactive</string>
+    <string name="service_active">● Service: Active ✅</string>
+    <string name="nearby_devices">● Nearby devices: %1$d</string>
+
+    <!-- Buttons -->
+    <string name="start_mesh">🔍 START MESH SERVICE</string>
+    <string name="stop_mesh">🛑 Stop Service</string>
+
+    <!-- Emergency Section -->
+    <string name="emergency_broadcast">Broadcast Emergency</string>
+    <string name="fire_emergency">🔥 FIRE</string>
+    <string name="medical_emergency">🚑 MEDICAL EMERGENCY</string>
+    <string name="evacuation_alert">⚠️ EVACUATION</string>
+
+    <!-- Last Emergency -->
+    <string name="last_emergency">Last Emergency Sent:</string>
+    <string name="none">None</string>
+</resources>

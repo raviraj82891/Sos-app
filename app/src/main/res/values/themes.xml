@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.EmergencyMesh" parent="Theme.Material3.DayNight">
+        <!-- Primary color (green for service button) -->
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <!-- Error color (red for fire button) -->
+        <item name="colorError">#FF5252</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">#FAFAFA</item>
+        <item name="colorOnSurface">#1A1A1A</item>
+        <item name="colorSurfaceVariant">#E0E0E0</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+</resources>

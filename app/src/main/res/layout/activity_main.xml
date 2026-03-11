@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- HEADER -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🆘 Emergency Mesh"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Offline Emergency Broadcasting"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="32dp" />
+
+        <!-- STATUS CARD -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#F5F5F5"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="System Status"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/tvServiceStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● Service: Inactive"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDeviceCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● Nearby devices: 0"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="6dp" />
+
+        </LinearLayout>
+
+        <!-- START BUTTON -->
+        <Button
+            android:id="@+id/btnStartMesh"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="🔍 START MESH SERVICE"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:background="#4CAF50"
+            android:layout_marginBottom="12dp" />
+
+        <!-- STOP BUTTON -->
+        <Button
+            android:id="@+id/btnStopMesh"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="🛑 Stop Service"
+            android:textSize="14sp"
+            android:background="#999999"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="32dp" />
+
+        <!-- EMERGENCY TITLE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Broadcast Emergency"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- FIRE -->
+        <Button
+            android:id="@+id/btnTriggerFire"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="🔥 FIRE"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:background="#FF5252"
+            android:layout_marginBottom="12dp" />
+
+        <!-- MEDICAL -->
+        <Button
+            android:id="@+id/btnTriggerMedical"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="🚑 MEDICAL EMERGENCY"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:background="#FF9800"
+            android:layout_marginBottom="12dp" />
+
+        <!-- EVACUATION -->
+        <Button
+            android:id="@+id/btnTriggerEvacuation"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="⚠️ EVACUATION"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:background="#FFC107"
+            android:layout_marginBottom="32dp" />
+
+        <!-- LAST EMERGENCY CARD -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#F5F5F5"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Emergency Sent:"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#666666"
+                android:layout_marginBottom="6dp" />
+
+            <TextView
+                android:id="@+id/tvLastEmergency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
