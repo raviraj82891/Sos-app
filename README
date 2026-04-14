@@ -2,19 +2,14 @@
 
 # 🚨 EmergencyMesh
 
-<p align="center">
-
-![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
-![Kotlin](https://img.shields.io/badge/Language-Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Bluetooth](https://img.shields.io/badge/Technology-Bluetooth_LE-0082FC?style=for-the-badge&logo=bluetooth&logoColor=white)
-![Type](https://img.shields.io/badge/Type-Emergency_Communication-FF1744?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-
-</p>
+# 🚨 EmergencyMesh
 
 <p align="center">
-  <strong>Infrastructure-free emergency communication using Bluetooth Low Energy mesh networking.</strong><br/>
-  When the internet goes down, EmergencyMesh keeps people connected.
+  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Language-Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Technology-Bluetooth_LE-0082FC?style=for-the-badge&logo=bluetooth&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Type-Emergency_Communication-FF1744?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>
 </p>
 
 ---
