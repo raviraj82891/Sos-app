@@ -1,7 +1,3 @@
-
-
-# 🚨 EmergencyMesh
-
 # 🚨 EmergencyMesh
 
 <p align="center">
@@ -10,6 +6,11 @@
   <img src="https://img.shields.io/badge/Technology-Bluetooth_LE-0082FC?style=for-the-badge&logo=bluetooth&logoColor=white"/>
   <img src="https://img.shields.io/badge/Type-Emergency_Communication-FF1744?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>
+</p>
+
+<p align="center">
+  <strong>Infrastructure-free emergency communication using Bluetooth Low Energy mesh networking.</strong><br/>
+  When the internet goes down, EmergencyMesh keeps people connected.
 </p>
 
 ---
