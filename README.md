@@ -395,7 +395,9 @@ Contributions are warmly welcome! Here is how to get involved:
 | Name | Role | GitHub |
 |---|---|---|
 | **Ravi Raj** | Lead Developer | [@raviraj82891](https://github.com/raviraj82891) |
-| **Rahul Ranjan** | Contributor | [@RahulRanjan2003](https://github.com/RahulRanjan2003) |
+| **Pragya Kumari** | Contributor | [@pragya-k-24](https://github.com/pragya-k-24) |
+| **Pooja Mohta** | Contributor | [@cybercobra28](https://github.com/cybercobra28) |
+| **Aditi Gupta** | Contributor | [@adanoia](https://github.com/adanoia) |
 
 ---
 
