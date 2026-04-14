@@ -4,13 +4,13 @@ plugins {
 
 
 android {
-    namespace = "com.yourname.emergencymesh"
+    namespace = "com.raviraj.emergencymesh"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.yourname.emergencymesh"
+        applicationId = "com.raviraj.emergencymesh"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -41,4 +41,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.cardview:cardview:1.0.0")
 }

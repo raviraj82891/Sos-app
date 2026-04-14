@@ -1,4 +1,4 @@
-package com.yourname.emergencymesh.ble
+package com.raviraj.emergencymesh.ble
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -7,16 +7,15 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
-import android.os.ParcelUuid
 import android.util.Log
-import com.yourname.emergencymesh.EmergencyMessage
-import com.yourname.emergencymesh.EmergencyType
+import com.raviraj.emergencymesh.EmergencyMessage
 
 class BleScanner(
     private val context: Context,
     private val onEmergencyReceived: (EmergencyMessage) -> Unit,
-    private val onLocationReceived: (String, Double, Double) -> Unit  // 🔥 NEW callback
+    private val onLocationReceived: (String, Double, Double) -> Unit
 ) {
 
     private val tag = "BleScanner"
@@ -29,33 +28,31 @@ class BleScanner(
     }
 
     fun startScanning() {
+        // 🔥 Scan for Manufacturer Data with our specific ID
         val filter = ScanFilter.Builder()
-            .setServiceUuid(ParcelUuid(MeshConfig.SERVICE_UUID))
+            .setManufacturerData(MeshConfig.MANUFACTURER_ID, byteArrayOf())
             .build()
 
         val settings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .build()
 
         scanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult) {
-                val serviceData = result.scanRecord?.getServiceData(ParcelUuid(MeshConfig.SERVICE_UUID))
+                val manufacturerData = result.scanRecord?.getManufacturerSpecificData(MeshConfig.MANUFACTURER_ID)
 
-                serviceData?.let { data ->
-                    val compactString = String(data)
-                    Log.d(tag, "📡 Received: $compactString (${data.size} bytes)")
-
+                manufacturerData?.let { data ->
                     try {
-                        // 🔥 Check if this is a location update (format: "senderId|L|lat,lng")
-                        if (compactString.contains("|L|")) {
-                            parseLocationUpdate(compactString)
-                        } else {
-                            // Regular emergency message
-                            val message = EmergencyMessage.fromCompactString(compactString)
-                            onEmergencyReceived(message)
+                        val message = EmergencyMessage.fromBinaryPayload(data)
+                        
+                        if (message.latitude != null && message.longitude != null) {
+                            onLocationReceived(message.senderId, message.latitude, message.longitude)
                         }
+                        
+                        onEmergencyReceived(message)
                     } catch (e: Exception) {
-                        Log.e(tag, "❌ Parse error: ${e.message}")
+                        // Log.v(tag, "Parse error: ${e.message}")
                     }
                 }
             }
@@ -68,7 +65,7 @@ class BleScanner(
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (context.checkSelfPermission(android.Manifest.permission.BLUETOOTH_SCAN)
-                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    != PackageManager.PERMISSION_GRANTED) {
                     Log.e(tag, "❌ Missing BLUETOOTH_SCAN permission")
                     return
                 }
@@ -80,25 +77,10 @@ class BleScanner(
                 scanCallback
             )
 
-            Log.d(tag, "🔍 Scanning started")
+            Log.d(tag, "🔍 Scanning started (Manufacturer ID: ${MeshConfig.MANUFACTURER_ID})")
 
         } catch (e: SecurityException) {
             Log.e(tag, "❌ SecurityException: ${e.message}")
-        }
-    }
-
-    // 🔥 NEW: Parse location updates
-    private fun parseLocationUpdate(compact: String) {
-        val parts = compact.split("|")
-        if (parts.size == 3 && parts[1] == "L") {
-            val senderId = parts[0]
-            val coords = parts[2].split(",")
-            if (coords.size == 2) {
-                val lat = coords[0].toDouble()
-                val lng = coords[1].toDouble()
-                Log.d(tag, "📍 Location update: $senderId at $lat, $lng")
-                onLocationReceived(senderId, lat, lng)
-            }
         }
     }
 
@@ -106,7 +88,7 @@ class BleScanner(
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (context.checkSelfPermission(android.Manifest.permission.BLUETOOTH_SCAN)
-                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    != PackageManager.PERMISSION_GRANTED) {
                     return
                 }
             }

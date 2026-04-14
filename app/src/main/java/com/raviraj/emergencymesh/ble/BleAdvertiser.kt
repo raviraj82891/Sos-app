@@ -1,4 +1,4 @@
-package com.yourname.emergencymesh.ble
+package com.raviraj.emergencymesh.ble
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -6,12 +6,12 @@ import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.os.ParcelUuid
 import android.util.Log
-import com.yourname.emergencymesh.EmergencyMessage
+import com.raviraj.emergencymesh.EmergencyMessage
 
 class BleAdvertiser(private val context: Context) {
 
@@ -19,6 +19,8 @@ class BleAdvertiser(private val context: Context) {
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var advertiseCallback: AdvertiseCallback? = null
     private val handler = Handler(Looper.getMainLooper())
+    
+    private var currentData: ByteArray? = null
 
     init {
         val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
@@ -26,29 +28,19 @@ class BleAdvertiser(private val context: Context) {
     }
 
     fun startAdvertising(message: EmergencyMessage) {
-
-        // 🔥 STEP 1: Broadcast emergency (12 bytes)
-        val compactData = "${message.senderId}|${when(message.type) {
-            com.yourname.emergencymesh.EmergencyType.FIRE -> "F"
-            com.yourname.emergencymesh.EmergencyType.MEDICAL -> "M"
-            com.yourname.emergencymesh.EmergencyType.EVACUATION -> "E"
-        }}|${message.ttl}"
+        val compactData = message.toBinaryPayload()
+        
+        if (currentData?.contentEquals(compactData) == true) {
+            return
+        }
 
         broadcastData(compactData)
-
-        // 🔥 STEP 2: Broadcast GPS location 500ms later (if available)
-        if (message.latitude != null && message.longitude != null) {
-            handler.postDelayed({
-                val locationData = "${message.senderId}|L|${String.format("%.2f", message.latitude)},${String.format("%.2f", message.longitude)}"
-                broadcastData(locationData)
-            }, 500)
-        }
     }
 
-    private fun broadcastData(data: String) {
-        val dataBytes = data.toByteArray()
+    private fun broadcastData(dataBytes: ByteArray) {
+        currentData = dataBytes
 
-        Log.d(tag, "📝 Broadcasting: $data (${dataBytes.size} bytes)")
+        Log.d(tag, "📝 Broadcasting: ${dataBytes.size} bytes")
 
         val settings = AdvertiseSettings.Builder()
             .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
@@ -57,9 +49,11 @@ class BleAdvertiser(private val context: Context) {
             .setConnectable(false)
             .build()
 
+        // 🔥 Switch to Manufacturer Data for maximum efficiency and compatibility.
+        // This only uses 4 bytes of overhead (Length, Type, 2-byte ID).
+        // Flags(3) + ManufacturerData(4 + 20) = 27 bytes total. Fits perfectly in 31-byte limit!
         val advertisementData = AdvertiseData.Builder()
-            .addServiceUuid(ParcelUuid(MeshConfig.SERVICE_UUID))
-            .addServiceData(ParcelUuid(MeshConfig.SERVICE_UUID), dataBytes)
+            .addManufacturerData(MeshConfig.MANUFACTURER_ID, dataBytes)
             .setIncludeDeviceName(false)
             .setIncludeTxPowerLevel(false)
             .build()
@@ -67,13 +61,13 @@ class BleAdvertiser(private val context: Context) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (context.checkSelfPermission(android.Manifest.permission.BLUETOOTH_ADVERTISE)
-                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    != PackageManager.PERMISSION_GRANTED) {
                     Log.e(tag, "❌ Missing BLUETOOTH_ADVERTISE permission")
                     return
                 }
             }
 
-            stopAdvertising()
+            stopCurrentLeAdvertising()
 
             advertiseCallback = object : AdvertiseCallback() {
                 override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
@@ -82,6 +76,7 @@ class BleAdvertiser(private val context: Context) {
 
                 override fun onStartFailure(errorCode: Int) {
                     Log.e(tag, "❌ Advertising failed: $errorCode")
+                    currentData = null
                 }
             }
 
@@ -96,21 +91,28 @@ class BleAdvertiser(private val context: Context) {
         }
     }
 
-    fun stopAdvertising() {
-        try {
-            handler.removeCallbacksAndMessages(null)
-            advertiseCallback?.let {
+    private fun stopCurrentLeAdvertising() {
+        advertiseCallback?.let {
+            try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     if (context.checkSelfPermission(android.Manifest.permission.BLUETOOTH_ADVERTISE)
-                        != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                        return
+                        == PackageManager.PERMISSION_GRANTED) {
+                        bluetoothAdapter?.bluetoothLeAdvertiser?.stopAdvertising(it)
                     }
+                } else {
+                    bluetoothAdapter?.bluetoothLeAdvertiser?.stopAdvertising(it)
                 }
-                bluetoothAdapter?.bluetoothLeAdvertiser?.stopAdvertising(it)
-                advertiseCallback = null
+            } catch (e: Exception) {
+                Log.e(tag, "❌ Error stopping: ${e.message}")
             }
-        } catch (e: SecurityException) {
-            Log.e(tag, "❌ Stop advertising error: ${e.message}")
+            advertiseCallback = null
         }
+    }
+
+    fun stopAdvertising() {
+        handler.removeCallbacksAndMessages(null)
+        stopCurrentLeAdvertising()
+        currentData = null
+        Log.d(tag, "🛑 Advertising stopped")
     }
 }

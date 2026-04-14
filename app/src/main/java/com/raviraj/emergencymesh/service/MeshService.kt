@@ -1,4 +1,4 @@
-package com.yourname.emergencymesh.service
+package com.raviraj.emergencymesh.service
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -9,17 +9,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.yourname.emergencymesh.EmergencyMessage
-import com.yourname.emergencymesh.EmergencyType
-import com.yourname.emergencymesh.R
-import com.yourname.emergencymesh.ble.BleAdvertiser
-import com.yourname.emergencymesh.ble.BleScanner
-import com.yourname.emergencymesh.ble.MeshConfig
-import com.yourname.emergencymesh.routing.MeshRoutingEngine
+import com.raviraj.emergencymesh.EmergencyMessage
+import com.raviraj.emergencymesh.EmergencyType
+import com.raviraj.emergencymesh.R
+import com.raviraj.emergencymesh.ble.BleAdvertiser
+import com.raviraj.emergencymesh.ble.BleScanner
+import com.raviraj.emergencymesh.ble.MeshConfig
+import com.raviraj.emergencymesh.routing.MeshRoutingEngine
 
 class MeshService : Service() {
 
@@ -29,6 +31,21 @@ class MeshService : Service() {
     private lateinit var bleScanner: BleScanner
     private lateinit var bleAdvertiser: BleAdvertiser
     private var wakeLock: PowerManager.WakeLock? = null
+    
+    private val handler = Handler(Looper.getMainLooper())
+    
+    // 🔥 Periodic UI update & Heartbeat
+    private val updateRunnable = object : Runnable {
+        override fun run() {
+            // 1. Send heartbeat so others can see us
+            sendHeartbeat()
+            
+            // 2. Update UI with current neighbor count
+            broadcastStatusUpdate()
+            
+            handler.postDelayed(this, 10000) // Heartbeat every 10 seconds
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -49,6 +66,7 @@ class MeshService : Service() {
             },
             onNewEmergency = { message ->
                 showEmergencyNotification(message)
+                broadcastEmergencyToUI(message)
             }
         )
 
@@ -57,7 +75,7 @@ class MeshService : Service() {
             onEmergencyReceived = { message ->
                 routingEngine.handleIncomingMessage(message)
             },
-            onLocationReceived = { senderId, lat, lng ->  // 🔥 NEW
+            onLocationReceived = { senderId, lat, lng ->
                 routingEngine.handleLocationUpdate(senderId, lat, lng)
             }
         )
@@ -65,10 +83,8 @@ class MeshService : Service() {
 
         createNotificationChannel()
 
-        // 🔥 FIX: Handle Android 14+ foreground service restrictions
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                // Android 14+ (API 34+)
                 startForeground(
                     MeshConfig.NOTIFICATION_ID,
                     createNotification(),
@@ -80,10 +96,10 @@ class MeshService : Service() {
             Log.d(TAG, "✅ Foreground service started")
         } catch (e: Exception) {
             Log.e(TAG, "❌ Failed to start foreground: ${e.message}")
-            // Service runs in background mode
         }
 
         bleScanner.startScanning()
+        handler.post(updateRunnable)
         Log.d(TAG, "🔍 BLE scanning started")
     }
 
@@ -102,9 +118,30 @@ class MeshService : Service() {
         return START_STICKY
     }
 
+    private fun sendHeartbeat() {
+        val heartbeat = routingEngine.createHeartbeat()
+        bleAdvertiser.startAdvertising(heartbeat)
+    }
+
     private fun broadcastEmergency(message: EmergencyMessage) {
         Log.d(TAG, "📡 Broadcasting: ${message.type}, TTL=${message.ttl}")
         bleAdvertiser.startAdvertising(message)
+    }
+
+    private fun broadcastStatusUpdate() {
+        val intent = Intent(MeshConfig.ACTION_MESH_UPDATE)
+        intent.putExtra(MeshConfig.EXTRA_DEVICE_COUNT, routingEngine.getNearbyDeviceCount())
+        sendBroadcast(intent)
+    }
+
+    private fun broadcastEmergencyToUI(message: EmergencyMessage) {
+        val intent = Intent(MeshConfig.ACTION_MESH_UPDATE)
+        intent.putExtra(MeshConfig.EXTRA_EMERGENCY_TYPE, message.type.name)
+        intent.putExtra(MeshConfig.EXTRA_EMERGENCY_MESSAGE, message.message)
+        intent.putExtra(MeshConfig.EXTRA_SENDER_ID, message.senderId)
+        intent.putExtra(MeshConfig.EXTRA_USER_NAME, message.userName)
+        intent.putExtra(MeshConfig.EXTRA_DEVICE_COUNT, routingEngine.getNearbyDeviceCount())
+        sendBroadcast(intent)
     }
 
     private fun showEmergencyNotification(message: EmergencyMessage) {
@@ -135,9 +172,10 @@ class MeshService : Service() {
             null
         }
 
+        val senderDisplay = message.userName ?: message.senderId
         val notificationText = buildString {
             append(message.message)
-            append("\n\nFrom: ${message.senderId}")
+            append("\n\nFrom: $senderDisplay")
             append("\nHops left: ${message.ttl}")
             if (message.latitude != null && message.longitude != null) {
                 append("\n${message.formatLocation()}")
@@ -170,11 +208,10 @@ class MeshService : Service() {
             message.senderId.hashCode() + message.type.hashCode(),
             notification
         )
-
-        Log.d(TAG, "🔔 Emergency notification shown with location: ${message.formatLocation()}")
     }
 
     override fun onDestroy() {
+        handler.removeCallbacks(updateRunnable)
         bleScanner.stopScanning()
         bleAdvertiser.stopAdvertising()
 

@@ -1,10 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- 2026 Futuristic Palette -->
+    <color name="bg_dark_slate">#020617</color> <!-- Ultra Dark Slate -->
+    <color name="bg_card_dark">#0F172A</color>
+    <color name="bg_gradient_start">#020617</color>
+    <color name="bg_gradient_end">#0F172A</color>
+
+    <color name="neon_blue">#00F2FF</color>   <!-- Cyber Cyan -->
+    <color name="neon_purple">#7000FF</color> <!-- Electric Purple -->
+    <color name="neon_green">#00FF94</color>  <!-- Cyber Green -->
+    <color name="neon_red">#FF3131</color>    <!-- Cyber Red -->
+
+    <!-- Emergency Gradients -->
+    <color name="fire_start">#FF416C</color>
+    <color name="fire_end">#FF4B2B</color>
+    <color name="medical_start">#2193B0</color>
+    <color name="medical_end">#6DD5ED</color>
+    <color name="evacuation_start">#F7971E</color>
+    <color name="evacuation_end">#FFD200</color>
+
+    <!-- Glassmorphism Elements -->
+    <color name="glass_white_10">#1AFFFFFF</color>
+    <color name="glass_white_20">#33FFFFFF</color>
+    <color name="glass_border">#26FFFFFF</color>
+    <color name="surface_glass_dark">#1AFFFFFF</color>
+    <color name="border_glass">#4DFFFFFF</color>
+
+    <!-- Status & UI -->
+    <color name="status_active">#00FF94</color>
+    <color name="status_inactive">#94A3B8</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_white">#FFFFFF</color>
+
+    <color name="sos_red">#FF003C</color>
+    <color name="sos_glow">#55FF003C</color>
+
+    <!-- Legacy / Missing Defaults -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
 </resources>

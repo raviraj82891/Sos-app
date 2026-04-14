@@ -1,36 +1,48 @@
-package com.yourname.emergencymesh
+package com.raviraj.emergencymesh
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.yourname.emergencymesh.routing.MeshRoutingEngine
-import com.yourname.emergencymesh.service.MeshService
+import com.raviraj.emergencymesh.routing.MeshRoutingEngine
+import com.raviraj.emergencymesh.service.MeshService
+import com.raviraj.emergencymesh.R
+import com.raviraj.emergencymesh.EmergencyType
 
-class MainActivity : AppCompatActivity() {
+/**
+ * Note: This file contained a duplicate MainActivity class which caused build errors.
+ * It has been renamed to MainActivityTestActivity and updated to match the project's logic.
+ */
+class MainActivityTestActivity : AppCompatActivity() {
 
     private lateinit var routingEngine: MeshRoutingEngine
-    private val PERMISSION_REQUEST_CODE = 100
+    private val permissionRequestCode = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        routingEngine = MeshRoutingEngine(this)
+        // Fixed: Added missing constructor parameters for MeshRoutingEngine
+        routingEngine = MeshRoutingEngine(
+            context = this,
+            onBroadcast = { /* No-op for test activity */ },
+            onNewEmergency = { /* No-op for test activity */ }
+        )
 
         requestPermissions()
 
-        findViewById<Button>(R.id.btnStartMesh).setOnClickListener {
+        findViewById<View>(R.id.btnStartMesh).setOnClickListener {
             startMeshService()
         }
 
-        findViewById<Button>(R.id.btnTriggerEmergency).setOnClickListener {
+        // Fixed: btnTriggerEmergency doesn't exist in layout, using btnTriggerFire
+        findViewById<View>(R.id.btnTriggerFire).setOnClickListener {
             triggerEmergency()
         }
     }
@@ -57,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (notGranted.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, notGranted.toTypedArray(), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(this, notGranted.toTypedArray(), permissionRequestCode)
         }
     }
 
@@ -72,8 +84,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun triggerEmergency() {
+        // Fixed: Changed String "FIRE" to EmergencyType.FIRE enum
         routingEngine.triggerEmergency(
-            type = "FIRE",
+            type = EmergencyType.FIRE,
             payload = "Fire detected at Building A"
         )
         Toast.makeText(this, "Emergency Triggered!", Toast.LENGTH_SHORT).show()

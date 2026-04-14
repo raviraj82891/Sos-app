@@ -4,27 +4,51 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
-        <aapt:attr name="android:fillColor">
+    <!-- Siren / Alarm -->
+    <path
+        android:fillColor="#FF3131"
+        android:pathData="M54,44.5L54,44.5c-4.4,0 -8,3.6 -8,8v9.5h16v-9.5C62,48.1 58.4,44.5 54,44.5z" />
+    <path
+        android:fillColor="#1A1F2B"
+        android:pathData="M44,62h20v4h-20z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M53,49h2v8h-2zM53,59h2v2h-2z" />
+    <!-- Rays -->
+    <path
+        android:fillColor="#FF3131"
+        android:pathData="M53,38h2v5h-2zM43.5,41.5l1.5,1.5l3.5,-3.5l-1.5,-1.5zM64.5,41.5l-1.5,1.5l-3.5,-3.5l1.5,-1.5z" />
+    <!-- Connecting Rings/Nodes -->
+    <path
+        android:pathData="M32.5,65.5a24.5,24.5 0,0 1,21.5 -35.5a24.5,24.5 0,0 1,21.5,35.5"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
             <gradient
-                android:endX="85.84757"
-                android:endY="92.4963"
-                android:startX="42.9492"
-                android:startY="49.59793"
+                android:startX="31"
+                android:startY="60"
+                android:endX="77"
+                android:endY="60"
                 android:type="linear">
-                <item
-                    android:color="#44000000"
-                    android:offset="0.0" />
-                <item
-                    android:color="#00000000"
-                    android:offset="1.0" />
+                <item android:offset="0" android:color="#00F2FF" />
+                <item android:offset="0.5" android:color="#FF3131" />
+                <item android:offset="1" android:color="#F7971E" />
             </gradient>
         </aapt:attr>
     </path>
     <path
-        android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
-        android:strokeWidth="1"
-        android:strokeColor="#00000000" />
+        android:pathData="M37.5,70.5a24.5,24.5 0,0 0,33 0"
+        android:strokeWidth="3.5"
+        android:strokeColor="#F7971E"
+        android:strokeLineCap="round" />
+    <!-- Nodes -->
+    <path
+        android:fillColor="#FF3131"
+        android:pathData="M54,30m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path
+        android:fillColor="#00F2FF"
+        android:pathData="M31,65m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path
+        android:fillColor="#F7971E"
+        android:pathData="M77,65m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
 </vector>

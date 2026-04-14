@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -56,11 +56,18 @@
                     android:background="@drawable/status_dot_inactive" />
             </RelativeLayout>
 
+            <!-- Mesh Radar View -->
+            <com.raviraj.emergencymesh.MeshRadarView
+                android:id="@+id/meshRadarView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="24dp" />
+
             <!-- Status Card (Glassmorphism) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="32dp"
                 android:background="@drawable/bg_glass_card"
                 android:padding="24dp">
 
@@ -126,15 +133,6 @@
                         android:textSize="14sp" />
                 </LinearLayout>
             </FrameLayout>
-
-            <!-- Main Radar Visualization -->
-            <com.raviraj.emergencymesh.MeshRadarView
-                android:id="@+id/meshRadarView"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:visibility="invisible" />
 
             <!-- Dynamic Toggle Button -->
             <com.google.android.material.button.MaterialButton
